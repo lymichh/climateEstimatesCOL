@@ -1,0 +1,152 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Análisis de temperaturas en Colombia</h1>
+        <small>Visualización con interpolación de Lagrange para estimación de temperaturas</small>
+    </div>
+</div>
+
+<div class="card">
+    <div class="info-box green">
+        <h3>ℹ️ Información</h3>
+        <p>
+            Este gráfico muestra las temperaturas promedio mensuales por municipio en Colombia. 
+            Utiliza el método de interpolación de Lagrange para estimar la temperatura 
+            en cualquier punto del año (mes decimal).
+        </p>
+    </div>
+
+    <!-- Controles -->
+    <div class="temperaturas-controls">
+        <div class="control-group">
+            <label for="municipio">Selecciona un municipio:</label>
+            <select id="municipio">
+                {% for mun in municipios %}
+                    <option value="{{ mun }}" {% if mun == municipio_default %}selected{% endif %}>{{ mun }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="tipo_temp">Tipo de temperatura:</label>
+            <select id="tipo_temp">
+                <option value="max" {% if tipo_temp_default == 'max' %}selected{% endif %}>Temperatura máxima</option>
+                <option value="min" {% if tipo_temp_default == 'min' %}selected{% endif %}>Temperatura mínima</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="mes_interpolacion">Mes para interpolación (1-12):</label>
+            <input 
+                type="number" 
+                id="mes_interpolacion" 
+                min="1" 
+                max="12"
+                step="0.1" 
+                value="{{ mes_default }}"
+                placeholder="Ej: 6.5"
+            >
+            <span class="input-helper">Usa decimales para puntos intermedios (ej: 6.5 = mediados de junio)</span>
+        </div>
+    </div>
+
+    <div id="loading-indicator" class="loading hidden"></div>
+
+    <!-- Contenedor del gráfico -->
+    <div id="chart-container-temp">
+        {{ graph_html|safe }}
+    </div>
+</div>
+
+<!-- Resultado de la interpolación -->
+{% if temp_estimada is not none %}
+<div class="resultado-interpolacion">
+    <h2>{{ temp_estimada }}°C</h2>
+    <p>Temperatura estimada mediante interpolación de Lagrange</p>
+    <small>Mes {{ mes_default }} en {{ municipio_default }}</small>
+</div>
+{% endif %}
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    const municipioSelect = document.getElementById('municipio');
+    const tipoTempSelect = document.getElementById('tipo_temp');
+    const mesInput = document.getElementById('mes_interpolacion');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const chartContainer = document.getElementById('chart-container-temp');
+
+    // Función para actualizar el gráfico
+    function actualizarGrafico() {
+        const municipio = municipioSelect.value;
+        const tipoTemp = tipoTempSelect.value;
+        let mes = mesInput.value;
+
+        // Validar el valor del mes
+        mes = parseFloat(mes);
+        if (isNaN(mes) || mes < 1 || mes > 12) {
+            alert('⚠️ Por favor ingresa un valor entre 1 y 12');
+            mesInput.value = 6.5;
+            return;
+        }
+
+        loadingIndicator.classList.remove('hidden');
+
+        // Hacer petición AJAX
+        fetch(`/temperaturas?municipio=${encodeURIComponent(municipio)}&tipo_temp=${tipoTemp}&mes=${mes}`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.json) {
+                const graphData = JSON.parse(data.json);
+                Plotly.newPlot('chart-container-temp', graphData.data, graphData.layout);
+                
+                // Actualizar la tarjeta de resultado
+                if (data.temp_estimada !== null) {
+                    const resultCard = document.querySelector('.resultado-interpolacion');
+                    if (resultCard) {
+                        resultCard.querySelector('h2').textContent = `${data.temp_estimada}°C`;
+                        resultCard.querySelector('small').textContent = `Mes ${mes} en ${municipio}`;
+                    }
+                }
+            } else if (data.html) {
+                chartContainer.innerHTML = data.html;
+            }
+            loadingIndicator.classList.add('hidden');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            loadingIndicator.classList.add('hidden');
+            alert('❌ Error al cargar los datos. Por favor intenta nuevamente.');
+        });
+    }
+
+    // Event listeners
+    municipioSelect.addEventListener('change', actualizarGrafico);
+    tipoTempSelect.addEventListener('change', actualizarGrafico);
+    
+    // Actualizar cuando se cambie el valor y se pierda el foco
+    mesInput.addEventListener('blur', actualizarGrafico);
+    
+    // Actualizar al presionar Enter
+    mesInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            mesInput.blur(); // Dispara el evento blur que actualiza
+        }
+    });
+
+    // Validación en tiempo real para que no se salgan de rango
+    mesInput.addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        if (value < 1) {
+            e.target.value = 1;
+        } else if (value > 12) {
+            e.target.value = 12;
+        }
+    });
+</script>
+{% endblock %}

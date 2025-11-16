@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Weather Colombia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/line-awesome@1.3.0/dist/line-awesome/css/line-awesome.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <input type="checkbox" name="" id="sidebar-toggle">
+
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-flex">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="" width="30px">
+            </div>
+        </div>
+        <div class="sidebar-main">
+            <div class="sidebar-user">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="">
+                <div>
+                    <h3>Weather Colombia</h3>
+                    <span>Estimación de temperaturas</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-head">
+                    <span>Navegación</span>
+                </div>
+                <ul>
+                    <li>
+                        <a href="/home">
+                            <span class="las la-home"></span>
+                            Página Principal
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/temperaturas">
+                            <span class="las la-chart-line"></span>
+                            Temperaturas
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <div class="menu-toggle">
+                <label for="sidebar-toggle">
+                    <span class="las la-bars"></span>
+                </label>
+            </div>
+        </header>
+        
+        <main>
+            {% block content %}
+            <!-- El contenido se agrega aqui -->
+            {% endblock %}
+        </main>
+    </div>
+
+    <label for="sidebar-toggle" class="body-label"></label>
+</body>
+</html>

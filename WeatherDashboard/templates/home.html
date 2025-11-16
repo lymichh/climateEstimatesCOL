@@ -1,0 +1,42 @@
+{% extends "index.html" %}
+
+{% block content %}
+<!-- Video de fondo -->
+<div class="video-background">
+    <video autoplay muted loop playsinline>
+        <source src="{{ url_for('static', filename='videos/colombia-clima2.mp4') }}" type="video/mp4">
+        <!-- Alternativas de video en caso de que no cargue el primero -->
+        <source src="{{ url_for('static', filename='videos/colombia-clima.webm') }}" type="video/webm">
+    </video>
+    <div class="video-overlay"></div>
+</div>
+
+<div class="page-headerHome">
+    <div>
+        <h1>WeatherCOL</h1>
+        <small>Análisis meteorológico y predicción de temperaturas en Colombia</small>
+    </div>
+</div>
+
+<div class="home-container">
+    <section class="home-intro">
+        <p>
+            Colombia es privilegiada por su diversidad climática excepcional.
+        </p>
+
+        <p>
+            Con WeatherCOL obtenemos una ventana clara hacia los patrones climáticos que definen cada región del país,
+            a través de gráficas dinámicas y métodos de interpolación matemática avanzados, 
+            como el algoritmo de Lagrange.
+        </p>
+
+        <p>
+            Para facilitar esta comprensión, puedes utilizar selectores de municipios, 
+            tipos de temperatura y estimaciones personalizadas para cualquier momento del año. 
+            Explora, analiza y prepárate para el clima colombiano con precisión y confianza.
+        </p>
+
+    </section>
+</div>
+
+{% endblock %}
