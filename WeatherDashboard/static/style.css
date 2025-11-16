@@ -3,7 +3,7 @@
 :root {
     --color-main: #182f2f; /* Definir los colores de la pagina */
     --color-main-dark: #101d1f;
-    --color-menu-text: #a2c9c5;
+    --color-menu-text: #f7f7d3;
     --color-info-text: #334155;
     --color-border: #25736a;
 }
@@ -72,7 +72,7 @@ body {
 }
 
 .sidebar-user {
-    margin: 0rem 0rem 1rem 0rem; /* Por donde está la img del logo, el del video puso 1rem 0rem 1rem 0rem */
+    margin: 0rem 0rem 1rem 0rem;
     text-align: center;
 }
 
@@ -138,11 +138,11 @@ header {
     width: calc(100% - 280px);
     top: 0;
     z-index: 20;
-    background: #fff;
+    background: #fcfceb;
     box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
     transition: left 300ms;
 }
-
+/* icono de la barra de menú */
 .menu-toggle label {
     height: 50px;
     width: 50px;
@@ -154,7 +154,7 @@ header {
 }
 
 .menu-toggle label:hover {
-    background: #efefef;
+    background: #ededda;
     cursor: pointer;
 }
 
@@ -197,10 +197,6 @@ main {
 
     #sidebar-toggle:checked ~ .body-label {
         right: 0;
-    }
-
-    .cards {
-        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -252,7 +248,6 @@ main {
     z-index: 1;
 }
 
-/* Ajustar el main para que el contenido esté sobre el video */
 main {
     position: relative;
     z-index: 2; /* Por encima del video */
@@ -262,7 +257,7 @@ main {
 .home-container {
     background: transparent;
     margin-top: 2rem;
-    padding: 3rem 4rem;
+    padding: 5rem 4rem;
     border-radius: 12px;
     animation: fadeInUp 0.6s ease-in-out;
     text-align: center;
@@ -280,7 +275,6 @@ main {
     font-weight: 400;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
-
 .home-intro p:first-of-type {
     margin-top: 1.5rem;
     font-size: 1.6rem;
@@ -292,33 +286,37 @@ main {
     justify-content: space-between;
 
 }
-.page-headerHome {
-    background: transparent;
-    padding: 2rem;
-    border-radius: 12px;
-    text-align: center;
-}
-
 .page-header h1 {
     font-size: 2rem;
     color: var(--color-main);
     font-weight: 600;
+}
+.page-header small {
+    display: block;
+    color: var(--color-info-text);
+    font-size: 1rem;
+    margin-top: 0.3rem;
+    font-weight: 500;
+}
+
+.page-headerHome {
+    position: relative;
+    background: transparent;
+    padding: 10rem 2rem;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 90px);
 }
 .page-headerHome h1 {
     font-size: 3.5rem;
     color: #ffffff;
     font-weight: 700;
     text-shadow: 3px 3px 12px rgba(0, 0, 0, 0.9);
+    margin: 0;
     margin-bottom: 0.5rem;
     letter-spacing: 2px;
-}
-
-.page-header small {
-    display: block;
-    color: #475569;
-    font-size: 1rem;
-    margin-top: 0.3rem;
-    font-weight: 500;
 }
 .page-headerHome small {
     display: block;
@@ -327,8 +325,67 @@ main {
     font-weight: 400;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
 }
+.page-headerHome div {
+    width: 100%;
+}
 
-/* Responsive: Ajustar video cuando sidebar desaparece */
+html {
+    scroll-behavior: smooth;
+}
+
+/* === BOTÓN SCROLL DOWN === */
+.scroll-down-btn {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+    animation: bounce 3s infinite;
+    text-decoration: none; /*enlace <a>*/
+    border: none; /*boton*/
+}
+
+.scroll-down-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateX(-50%) scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.scroll-down-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--color-main);
+    transition: transform 0.3s ease;
+}
+
+.scroll-down-btn:hover svg {
+    transform: translateY(3px);
+}
+
+/* Animación de rebote */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    40% {
+        transform: translateX(-50%) translateY(-10px);
+    }
+    60% {
+        transform: translateX(-50%) translateY(-5px);
+    }
+}
+
+/* Responsive video */
 @media only screen and (max-width: 1900px) {
     .video-background {
         left: 0;
@@ -339,7 +396,7 @@ main {
 /* Responsive mobile */
 @media only screen and (max-width: 768px) {
     .home-container {
-        padding: 2rem 1.5rem;
+        padding: 7rem 1.5rem;
     }
 
     .home-intro p {
@@ -350,14 +407,27 @@ main {
 
     .home-intro p:first-of-type {
         font-size: 1.3rem;
+        padding: 2rem;
+        margin-bottom: 3rem;
     }
 
-    .page-header h1 {
+    .page-headerHome h1 {
         font-size: 2.5rem;
     }
 
-    .page-header small {
+    .page-headerHome small {
         font-size: 1rem;
+    }
+
+    .scroll-down-btn {
+        width: 45px;
+        height: 45px;
+        bottom: 2rem;
+    }
+
+    .scroll-down-btn svg {
+        width: 20px;
+        height: 20px;
     }
 }
 

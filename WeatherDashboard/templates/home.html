@@ -5,7 +5,6 @@
 <div class="video-background">
     <video autoplay muted loop playsinline>
         <source src="{{ url_for('static', filename='videos/colombia-clima2.mp4') }}" type="video/mp4">
-        <!-- Alternativas de video en caso de que no cargue el primero -->
         <source src="{{ url_for('static', filename='videos/colombia-clima.webm') }}" type="video/webm">
     </video>
     <div class="video-overlay"></div>
@@ -16,9 +15,15 @@
         <h1>WeatherCOL</h1>
         <small>Análisis meteorológico y predicción de temperaturas en Colombia</small>
     </div>
+    
+    <a href="#content-section" class="scroll-down-btn" aria-label="Desplazarse hacia abajo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M12 4l-8 8h5v8h6v-8h5z" transform="rotate(180 12 12)"/>
+        </svg>
+    </a>
 </div>
 
-<div class="home-container">
+<div class="home-container" id="content-section">
     <section class="home-intro">
         <p>
             Colombia es privilegiada por su diversidad climática excepcional.
@@ -35,8 +40,23 @@
             tipos de temperatura y estimaciones personalizadas para cualquier momento del año. 
             Explora, analiza y prepárate para el clima colombiano con precisión y confianza.
         </p>
-
     </section>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollBtn = document.querySelector('.scroll-down-btn');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 100) {
+                scrollBtn.style.opacity = '0';
+                scrollBtn.style.pointerEvents = 'none';
+            } else {
+                scrollBtn.style.opacity = '1';
+                scrollBtn.style.pointerEvents = 'auto';
+            }
+        });
+    });
+</script>
 
 {% endblock %}
